@@ -5,16 +5,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 
 import com.sennin.dev.dogs.R
+import com.sennin.dev.dogs.viewmodel.DetailViewModel
 import kotlinx.android.synthetic.main.fragment_detail.*
 
 /**
  * A simple [Fragment] subclass.
  */
 class DetailFragment : Fragment() {
+    private lateinit var detailViewModel: DetailViewModel
     private var dogUuid = 0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,14 +30,26 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        detailViewModel = ViewModelProviders.of(this).get(DetailViewModel::class.java)
+        detailViewModel.fetch()
+
         arguments?.let {
             dogUuid = DetailFragmentArgs.fromBundle(it).dogUuid
-            textView2.text = dogUuid.toString()
         }
-        buttonList.setOnClickListener {
-            val action: NavDirections = DetailFragmentDirections.actionListFragment()
-            Navigation.findNavController(it).navigate(action)
-        }
+
+        observeViewModel()
+
+    }
+
+    fun observeViewModel() {
+        detailViewModel.dogLiveData.observe(this, Observer { dog ->
+            dog?.let {
+                dogName.text = it.dogBreed
+                dogPurpose.text = it.breadFor
+                dogTemperament.text = it.temperament
+                dogLifeSpan.text = it.lifeSpan
+            }
+        })
     }
 
 }
