@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.NavDirections
-import androidx.navigation.Navigation
 
 import com.sennin.dev.dogs.R
 import com.sennin.dev.dogs.viewmodel.DetailViewModel
@@ -45,7 +43,7 @@ class DetailFragment : Fragment() {
         detailViewModel.dogLiveData.observe(this, Observer { dog ->
             dog?.let {
                 dogName.text = it.dogBreed
-                dogPurpose.text = it.breadFor
+                dogPurpose.text = it.bredFor
                 dogTemperament.text = it.temperament
                 dogLifeSpan.text = it.lifeSpan
             }
