@@ -34,6 +34,8 @@ class DogListAdapter(val dogsList: ArrayList<DogBreed>) :
         holder.view.name.text = dogsList[position].dogBreed
         holder.view.lifespan.text = dogsList[position].lifeSpan
         holder.view.setOnClickListener {
+            val action = ListFragmentDirections.actionDetailFragment()
+            action.dogUuid = dogsList[position].uuid
             Navigation.findNavController(it).navigate(ListFragmentDirections.actionDetailFragment())
         }
 
