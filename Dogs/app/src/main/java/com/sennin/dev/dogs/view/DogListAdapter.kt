@@ -36,7 +36,7 @@ class DogListAdapter(val dogsList: ArrayList<DogBreed>) :
         holder.view.setOnClickListener {
             val action = ListFragmentDirections.actionDetailFragment()
             action.dogUuid = dogsList[position].uuid
-            Navigation.findNavController(it).navigate(ListFragmentDirections.actionDetailFragment())
+            Navigation.findNavController(it).navigate(action)
         }
 
         holder.view.imageView.loadImage(

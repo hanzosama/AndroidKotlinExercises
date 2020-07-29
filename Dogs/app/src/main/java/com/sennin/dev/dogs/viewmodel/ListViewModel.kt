@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 class ListViewModel(application: Application) : BaseViewModel(application) {
     private val dogsService = DogsApiService()
     private val prefHelper = SharedPreferencesHelper(getApplication())
+    private val dogsRepository = DogDataBase(getApplication()).dogDao()
 
     //in nano Time format
     private var refreshTime = 5 * 60 * 1000 * 1000 * 1000L
@@ -44,7 +45,7 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
     private fun fetchFromDataBase() {
         loading.postValue(true)
         launch {
-            val dogs = DogDataBase(getApplication()).dogDao().getAllDogs()
+            val dogs = dogsRepository.getAllDogs()
             dogsRetrieved(dogs)
             Toast.makeText(getApplication(), "Dogs from database", Toast.LENGTH_LONG).show()
         }
@@ -84,9 +85,9 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
 
     private fun storeDogsLocally(dogList: List<DogBreed>) {
         launch {
-            val dao = DogDataBase(getApplication()).dogDao()
-            dao.deleteAllDogs()
-            val result = dao.insertAll(* dogList.toTypedArray())
+
+            dogsRepository.deleteAllDogs()
+            val result = dogsRepository.insertAll(* dogList.toTypedArray())
             var i = 0
             while (i < dogList.size) {
                 dogList[i].uuid = result[i].toInt()
