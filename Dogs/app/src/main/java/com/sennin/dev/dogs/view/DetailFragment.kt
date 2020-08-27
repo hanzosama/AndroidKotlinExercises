@@ -1,22 +1,23 @@
 package com.sennin.dev.dogs.view
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-
+import androidx.palette.graphics.Palette
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.sennin.dev.dogs.R
 import com.sennin.dev.dogs.databinding.FragmentDetailBinding
-import com.sennin.dev.dogs.databinding.ItemDogBinding
-import com.sennin.dev.dogs.util.getProgressDrawable
-import com.sennin.dev.dogs.util.loadImage
+import com.sennin.dev.dogs.model.DogPalette
 import com.sennin.dev.dogs.viewmodel.DetailViewModel
-import kotlinx.android.synthetic.main.fragment_detail.*
-import kotlinx.android.synthetic.main.item_dog.view.*
 
 /**
  * A simple [Fragment] subclass.
@@ -58,7 +59,30 @@ class DetailFragment : Fragment() {
         detailViewModel.dogLiveData.observe(this, Observer { dog ->
             dog?.let {
                 fragmentDetailBinding.dog = it
+
+                it.imageUrl?.let {
+                    setUpBackgroundColor(it)
+                }
             }
+        })
+    }
+
+
+    private fun setUpBackgroundColor(url: String) {
+        Glide.with(this).asBitmap().load(url).into(object : CustomTarget<Bitmap>() {
+            override fun onLoadCleared(placeholder: Drawable?) {
+            //not required to implement
+            }
+
+            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                //This is part of palette library
+                Palette.from(resource).generate { palette ->
+                    val intColor = palette?.lightMutedSwatch?.rgb ?: 0
+                    val myPalette = DogPalette(intColor)
+                    fragmentDetailBinding.palette = myPalette
+                }
+            }
+
         })
     }
 
