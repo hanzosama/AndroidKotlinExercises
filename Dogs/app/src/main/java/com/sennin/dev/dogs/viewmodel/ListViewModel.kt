@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.sennin.dev.dogs.model.DogBreed
 import com.sennin.dev.dogs.model.DogDataBase
 import com.sennin.dev.dogs.model.DogsApiService
+import com.sennin.dev.dogs.util.NotificationsHelper
 import com.sennin.dev.dogs.util.SharedPreferencesHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -38,7 +39,7 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
         }
     }
 
-    fun refreshBypassCache(){
+    fun refreshBypassCache() {
         fetchFromRemote()
     }
 
@@ -65,6 +66,9 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
                         storeDogsLocally(dogList)
                         Toast.makeText(getApplication(), "Dogs from server", Toast.LENGTH_LONG)
                             .show()
+
+                        //implemented the notification
+                        NotificationsHelper(getApplication()).createNotification()
 
                     }
 
