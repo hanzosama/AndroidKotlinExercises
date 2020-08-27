@@ -5,10 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 
 import com.sennin.dev.dogs.R
+import com.sennin.dev.dogs.databinding.FragmentDetailBinding
+import com.sennin.dev.dogs.databinding.ItemDogBinding
 import com.sennin.dev.dogs.util.getProgressDrawable
 import com.sennin.dev.dogs.util.loadImage
 import com.sennin.dev.dogs.viewmodel.DetailViewModel
@@ -21,12 +24,20 @@ import kotlinx.android.synthetic.main.item_dog.view.*
 class DetailFragment : Fragment() {
     private lateinit var detailViewModel: DetailViewModel
     private var dogUuid = 0
+    private lateinit var fragmentDetailBinding: FragmentDetailBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_detail, container, false)
+        fragmentDetailBinding =
+            DataBindingUtil.inflate<FragmentDetailBinding>(
+                inflater,
+                R.layout.fragment_detail,
+                container,
+                false
+            )
+        return fragmentDetailBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,7 +49,7 @@ class DetailFragment : Fragment() {
         }
 
         detailViewModel.fetchDog(dogUuid)
-
+        DataBindingUtil.getBinding<FragmentDetailBinding>(view)
         observeViewModel()
 
     }
@@ -46,14 +57,7 @@ class DetailFragment : Fragment() {
     fun observeViewModel() {
         detailViewModel.dogLiveData.observe(this, Observer { dog ->
             dog?.let {
-                dogName.text = it.dogBreed
-                dogPurpose.text = it.bredFor
-                dogTemperament.text = it.temperament
-                dogLifeSpan.text = it.lifeSpan
-                dogImage.loadImage(
-                    it.imageUrl,
-                    getProgressDrawable(dogImage.context)
-                )
+                fragmentDetailBinding.dog = it
             }
         })
     }

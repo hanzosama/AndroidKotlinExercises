@@ -30,6 +30,8 @@ fun ImageView.loadImage(uri: String?, progressDrawable: CircularProgressDrawable
 }
 
 @BindingAdapter("android:imageUrl")
-fun loadImage(view: ImageView, url: String) {
-    view.loadImage(url, getProgressDrawable(view.context))
+fun loadImage(view: ImageView, url: String?) {
+    if (url != null) {
+        view.loadImage(url, getProgressDrawable(view.context))
+    }
 }
