@@ -9,6 +9,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.sennin.dev.dogs.R
 
 
+val PERMISSION_SEND_SMS = 1234
 //It will create the Spinner to use with is loading the images from remote.
 fun getProgressDrawable(context: Context): CircularProgressDrawable {
     return CircularProgressDrawable(context).apply {
