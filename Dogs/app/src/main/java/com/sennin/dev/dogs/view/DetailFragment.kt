@@ -111,7 +111,15 @@ class DetailFragment : Fragment() {
 
             R.id.action_share -> {
                 //Check Permissions
-
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.type = "text/plain"
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Check this dog breed")
+                intent.putExtra(
+                    Intent.EXTRA_TEXT,
+                    "${currentDog?.dogBreed} breed for ${currentDog?.bredFor}"
+                )
+                intent.putExtra(Intent.EXTRA_STREAM, currentDog?.imageUrl)
+                startActivity(Intent.createChooser(intent, "Share with"))
             }
         }
         return super.onOptionsItemSelected(item)
